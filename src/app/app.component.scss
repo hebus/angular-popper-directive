@@ -1,7 +1,8 @@
-.box {
-  border: 1px solid red;
-  height: 40px;
-  max-height: 300px;
-  width: 100%;
-  overflow-y: hidden;
+main {
+  margin: 5px;
+}
+
+li.dropdown-submenu a {
+  display: flex;
+  justify-content: space-between;
 }

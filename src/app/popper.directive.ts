@@ -5,14 +5,15 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
-} from "@angular/core";
-import { createPopper, Placement, Options, Instance } from "@popperjs/core";
-import { fromEvent, merge, Subject } from "rxjs";
-import { filter, pluck, takeUntil } from "rxjs/operators";
+  Renderer2,
+} from '@angular/core';
+import { createPopper, Placement, Options, Instance } from '@popperjs/core';
+import { fromEvent, merge, Subject } from 'rxjs';
+import { filter, pluck, takeUntil } from 'rxjs/operators';
 
 @Directive({
-  selector: "[sqPopper]"
+  selector: '[sqPopper]',
+  standalone: true,
 })
 export class PopperDirective implements OnInit, OnDestroy {
   // The hint to display
@@ -24,16 +25,16 @@ export class PopperDirective implements OnInit, OnDestroy {
   // The popper instance
   protected popper: Instance;
   protected readonly defaultConfig: Options = {
-    placement: "right",
-    strategy: "fixed",
+    placement: 'right',
+    strategy: 'fixed',
     modifiers: [
       {
-        name: "offset",
+        name: 'offset',
         options: {
-          offset: [0, -2]
-        }
-      }
-    ]
+          offset: [0, -2],
+        },
+      },
+    ],
   };
   protected readonly destroy$ = new Subject<void>();
 
@@ -46,19 +47,19 @@ export class PopperDirective implements OnInit, OnDestroy {
 
     this.popper = createPopper(reference, this.target, {
       ...this.defaultConfig,
-      placement: this.placement || this.defaultConfig.placement
+      placement: this.placement || this.defaultConfig.placement,
     });
 
-    this.renderer.setStyle(this.target, "display", "none");
+    this.renderer.setStyle(this.target, 'display', 'none');
 
     merge(
-      fromEvent(reference, "mouseenter"),
-      fromEvent(reference, "mouseleave"),
+      fromEvent(reference, 'mouseenter'),
+      fromEvent(reference, 'mouseleave')
       // fromEvent(reference, 'click')
     )
       .pipe(
         filter(() => this.popper != null),
-        pluck("type"),
+        pluck('type'),
         takeUntil(this.destroy$)
       )
       .subscribe((e: any) => this.mouseHoverHandler(e));
@@ -76,23 +77,23 @@ export class PopperDirective implements OnInit, OnDestroy {
   }
 
   protected mouseHoverHandler(e: string): void {
-    if (!this.target.classList.contains("show")) {
-      this.renderer.removeStyle(this.target, "display");
-      this.renderer.addClass(this.target, "show");
+    if (!this.target.classList.contains('show')) {
+      this.renderer.removeStyle(this.target, 'display');
+      this.renderer.addClass(this.target, 'show');
       this.show();
     } else {
-      this.renderer.setStyle(this.target, "display", "none");
-      this.renderer.removeClass(this.target, "show");
+      this.renderer.setStyle(this.target, 'display', 'none');
+      this.renderer.removeClass(this.target, 'show');
     }
   }
 
   protected show() {
     const reference = this.sqPopper ? this.sqPopper : this.el.nativeElement;
-    console.log("ref", reference, this.target);
+    console.log('ref', reference, this.target);
 
     this.popper = createPopper(reference, this.target, {
       ...this.defaultConfig,
-      placement: this.placement || this.defaultConfig.placement
+      placement: this.placement || this.defaultConfig.placement,
     });
   }
 }
